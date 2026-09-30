@@ -1,0 +1,6 @@
+{
+  "extends": "./config/tsconfig.json",
+  // Mirrors package.json "imports" so @shadcn/lint can resolve components.json's "#components/ui" to a directory.
+  "compilerOptions": { "paths": { "#components/*": ["./src/components/*"] } },
+  "include": ["src", "test"]
+}

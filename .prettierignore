@@ -1,0 +1,3 @@
+pnpm-lock.yaml
+# Vendored shadcn/ui sources stay byte-identical to upstream so `shadcn add --overwrite` diffs stay readable.
+src/components/ui

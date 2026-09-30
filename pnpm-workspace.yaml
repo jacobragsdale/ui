@@ -1,0 +1,6 @@
+packages:
+  - template
+
+# The template names the published package so it can be copied out as-is; inside this repo it uses the local checkout.
+overrides:
+  "@jacobragsdale/ui": "link:."

@@ -1,0 +1,130 @@
+/*
+ * The one stylesheet an app imports. Palettes come from ~/dev/theme (the terminal theme tool), so the web and the
+ * terminal match. Text tokens clear 5.5:1 on every surface they sit on; chart-1..5 are the palette's hues stepped into
+ * the dark chart lightness band and checked for colour-vision deficiency with the dataviz validator.
+ *
+ * Add a theme: copy a [data-theme] block, change the values, and register it in src/lib/theme.ts.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Tailwind skips node_modules, so scan this package's components from wherever it is installed. */
+@source "./components";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Geist Variable", sans-serif;
+  --font-mono: "JetBrains Mono Variable", monospace;
+  --font-heading: var(--font-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Neon Void: near-black with neon accents. The default, so it also sits on :root. */
+:root,
+[data-theme="neon-void"] {
+  color-scheme: dark;
+  --radius: 0.5rem;
+  --background: #05060a;
+  --foreground: #dfe6ff;
+  --card: #0b0d14;
+  --card-foreground: #dfe6ff;
+  --popover: #0b0d14;
+  --popover-foreground: #dfe6ff;
+  --primary: #c07cff;
+  --primary-foreground: #05060a;
+  --secondary: #171b28;
+  --secondary-foreground: #dfe6ff;
+  --muted: #171b28;
+  --muted-foreground: #8a94c4;
+  --accent: #171b28;
+  --accent-foreground: #dfe6ff;
+  --destructive: #ff5f87;
+  --success: #4ef5a4;
+  --warning: #ffd75f;
+  --border: rgb(223 230 255 / 12%);
+  --input: rgb(223 230 255 / 16%);
+  --ring: #c07cff;
+  --chart-1: #4a91e6;
+  --chart-2: #d07331;
+  --chart-3: #03a693;
+  --chart-4: #ad69ea;
+  --chart-5: #ad8b06;
+}
+
+/* Grok Night: neutral charcoal with Tokyo Night accents. */
+[data-theme="grok-night"] {
+  color-scheme: dark;
+  --radius: 0.625rem;
+  --background: #141414;
+  --foreground: #e1e1e1;
+  --card: #1c1c1c;
+  --card-foreground: #e1e1e1;
+  --popover: #1c1c1c;
+  --popover-foreground: #e1e1e1;
+  --primary: #bb9af7;
+  --primary-foreground: #141414;
+  --secondary: #242424;
+  --secondary-foreground: #e1e1e1;
+  --muted: #242424;
+  --muted-foreground: #9a9a9a;
+  --accent: #242424;
+  --accent-foreground: #e1e1e1;
+  --destructive: #f7768e;
+  --success: #9ece6a;
+  --warning: #e0af68;
+  --border: rgb(225 225 225 / 12%);
+  --input: rgb(225 225 225 / 16%);
+  --ring: #bb9af7;
+  --chart-1: #668ce0;
+  --chart-2: #d07338;
+  --chart-3: #03a78a;
+  --chart-4: #9c7bd5;
+  --chart-5: #b4853e;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
