@@ -1,6 +1,6 @@
 {
   "name": "@jacobragsdale/ui",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Shared theme, shadcn/ui components, and strict lint/type configs for Jacob's web apps.",
   "license": "MIT",
   "repository": "github:jacobragsdale/ui",
