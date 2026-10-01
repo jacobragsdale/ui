@@ -1,12 +1,25 @@
 import { useSyncExternalStore } from "react";
 
+declare module "react" {
+  // Pass data-driven values to classes through CSS variables, as in style={{ "--fill": "40%" }} with className="w-(--fill)".
+  // Declared here because every app imports this module, which puts the augmentation in its program.
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style -- declaration merging needs an interface, not a Record.
+  interface CSSProperties {
+    [variable: `--${string}`]: string | number | undefined;
+  }
+}
+
 interface ThemeInfo {
   readonly label: string;
   readonly appearance: "light" | "dark";
 }
 
 /** Every theme in styles.css. The key is the `data-theme` value. */
-export const themes = { "neon-void": { label: "Neon Void", appearance: "dark" }, "grok-night": { label: "Grok Night", appearance: "dark" } } as const satisfies Readonly<Record<string, ThemeInfo>>;
+export const themes = {
+  "neon-void": { label: "Neon Void", appearance: "dark" },
+  "grok-night": { label: "Grok Night", appearance: "dark" },
+  "tokyo-night": { label: "Tokyo Night", appearance: "dark" }
+} as const satisfies Readonly<Record<string, ThemeInfo>>;
 
 export type ThemeId = keyof typeof themes;
 
@@ -25,6 +38,9 @@ function apply(id: ThemeId): void {
   const root = document.documentElement;
   root.dataset["theme"] = id;
   root.classList.toggle("dark", info.appearance === "dark");
+  // Installed web apps paint the status bar from this meta tag; read the colour from the stylesheet so it stays the one source.
+  const background = getComputedStyle(root).getPropertyValue("--background").trim();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", background);
 }
 
 /** Apply the saved theme, or `fallback`, before the first render. */

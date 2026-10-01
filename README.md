@@ -2,12 +2,12 @@
 
 One package that gives every web app the same look and the same guardrails: two swappable themes, shadcn/ui components (Base UI primitives), and strict TypeScript, ESLint, and Prettier configs. Apps install it from this repository, so a theme or component change ships to every app with `pnpm update`.
 
-![Neon Void and Grok Night](docs/themes.png)
+![Neon Void, Grok Night, and Tokyo Night](docs/themes.png)
 
 | Piece      | What an app gets                                                                                                                                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Theme      | `styles.css`: Tailwind v4, the Neon Void and Grok Night token sets, Geist and JetBrains Mono.                                                                                                                                     |
-| Components | 18 shadcn/ui components plus a theme switcher and `toast`.                                                                                                                                                                        |
+| Theme      | `styles.css`: Tailwind v4, three dark themes (Neon Void, the default; Grok Night; Tokyo Night), Geist and JetBrains Mono, safe-area utilities.                                                                                    |
+| Components | 34 shadcn/ui components plus a theme switcher, `toast`, and `cn`.                                                                                                                                                                 |
 | TypeScript | `tsconfig.json` with `strict` and every extra strictness flag, including `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess`.                                                                                             |
 | ESLint     | typescript-eslint `strictTypeChecked`, `@eslint-react` strict, jsx-a11y strict, unicorn, react-refresh, and all six [`@shadcn/lint`](https://github.com/shadcn-ui/lint) design-system rules, with explicit return types required. |
 | Prettier   | Width 200, no trailing commas, collapsed objects.                                                                                                                                                                                 |
@@ -84,7 +84,7 @@ This guide assumes a Vite + React 19 app with Tailwind v4 and pnpm.
    initTheme();
    ```
 
-7. Change imports from the app's own shadcn copies (`@/components/ui/button`) to `@jacobragsdale/ui/components/ui/button`, then delete the local copies of every component the package has (`ls node_modules/@jacobragsdale/ui/src/components/ui`) and `components.json`. If app code calls `cn`, run `pnpm add cn` and import it with `import { cn } from "cn"` instead of the local helper.
+7. Change imports from the app's own shadcn copies (`@/components/ui/button`) to `@jacobragsdale/ui/components/ui/button`, then delete the local copies of every component the package has (`ls node_modules/@jacobragsdale/ui/src/components/ui`). Replace the app's `components.json` with [the template's](template/components.json): it tells `@shadcn/lint` that the theme is the app's `src/index.css`, so colours and utilities the app declares there pass the lint. If app code calls `cn`, import it from `@jacobragsdale/ui/lib/utils` instead of the local helper.
 8. Run `pnpm typecheck` and `pnpm lint`, and fix what they report. Most errors in an older app are missing return types and `className` overrides on components; [DESIGN.md](DESIGN.md) says what to use instead.
 
 The migration is done when `pnpm typecheck`, `pnpm lint`, and `pnpm build` pass and `pnpm dev` shows the app in Neon Void.
@@ -140,7 +140,7 @@ pnpm shadcn add COMPONENT
 
 `COMPONENT` is a name from the [shadcn/ui component list](https://ui.shadcn.com/docs/components), such as `popover`. The CLI writes it to `src/components/ui/` and adds its dependencies, and apps import it as `@jacobragsdale/ui/components/ui/COMPONENT` with no export list to update. If `pnpm typecheck` then reports `Cannot find module` for a package the new file imports, `pnpm add` that package; the CLI missed `@base-ui/react` the first time.
 
-Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. One file carries a local edit that `pnpm shadcn add --overwrite` would undo: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`.
+Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Two files carry local edits that `pnpm shadcn add --overwrite` would undo: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`, and `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`.
 
 ## Reference
 
@@ -153,18 +153,21 @@ Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier
 | `@jacobragsdale/ui/components/theme-switcher` | `ThemeSwitcher`: a select that changes and saves the theme.                   |
 | `@jacobragsdale/ui/lib/theme`                 | Theme runtime; see below.                                                     |
 | `@jacobragsdale/ui/lib/toast`                 | `toast` from sonner, matching the `Toaster` in `components/ui/sonner`.        |
+| `@jacobragsdale/ui/lib/utils`                 | `cn`, the class-merging helper the components use.                            |
 | `@jacobragsdale/ui/eslint`                    | `config(rootDir)`: the flat ESLint config.                                    |
 | `@jacobragsdale/ui/prettier`                  | The Prettier config.                                                          |
 | `@jacobragsdale/ui/tsconfig.json`             | The base TypeScript config for Vite + React.                                  |
 
 The package ships TypeScript source, not compiled JavaScript. The app's Vite compiles it and the app's `tsc` checks it with the same strict config.
 
+An app that uses `components/ui/chart` adds `recharts` at the version in this package's `package.json` (3.8.0), so the chart components and the app's recharts types match. Icons come from `lucide-react`, which apps add the same way.
+
 ### Theme runtime (`lib/theme`)
 
 | Export                 | Description                                                                                                    |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `themes`               | Every theme id with its `label` and `appearance`.                                                              |
-| `ThemeId`              | Union of theme ids: `"neon-void" \| "grok-night"`.                                                             |
+| `ThemeId`              | Union of theme ids: `"neon-void" \| "grok-night" \| "tokyo-night"`.                                            |
 | `themeIds`             | The ids as an array, in declaration order.                                                                     |
 | `defaultTheme`         | `"neon-void"`.                                                                                                 |
 | `initTheme(fallback?)` | Applies the theme saved in `localStorage`, or `fallback` (default `defaultTheme`). Call once before rendering. |
@@ -172,7 +175,9 @@ The package ships TypeScript source, not compiled JavaScript. The app's Vite com
 | `useTheme()`           | React hook returning the current `ThemeId`; re-renders when the theme changes.                                 |
 | `isThemeId(value)`     | Type guard for untrusted values such as storage or select input.                                               |
 
-A theme is applied by setting `data-theme` on `<html>` and toggling the `dark` class for dark themes.
+A theme is applied by setting `data-theme` on `<html>`, toggling the `dark` class for dark themes, and copying the theme's `--background` into `<meta name="theme-color">` when the page has one.
+
+Importing this module also lets `style` take CSS variables without a type assertion (`style={{ "--fill": "40%" }}`); see [DESIGN.md](DESIGN.md#values-from-data).
 
 ## License
 

@@ -18,6 +18,8 @@ import { Textarea } from "@jacobragsdale/ui/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@jacobragsdale/ui/components/ui/tooltip";
 import { toast } from "@jacobragsdale/ui/lib/toast";
 
+import { ControlsCard, OverlaysCard } from "./more";
+
 import type { ReactElement } from "react";
 
 const services = [
@@ -223,21 +225,25 @@ function TokensCard(): ReactElement {
 export function App(): ReactElement {
   return (
     <TooltipProvider>
-      <main className="mx-auto flex max-w-5xl flex-col gap-6 p-6">
-        <header className="flex items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h1 className="font-heading text-2xl font-semibold">Template</h1>
-            <p className="text-sm text-muted-foreground">Every shared component and token, in the current theme.</p>
+      <div className="pt-safe-top">
+        <main className="mx-auto flex max-w-5xl flex-col gap-6 p-6">
+          <header className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h1 className="font-heading text-2xl font-semibold">Template</h1>
+              <p className="text-sm text-muted-foreground">Every shared component and token, in the current theme.</p>
+            </div>
+            <ThemeSwitcher />
+          </header>
+          <div className="grid gap-6 md:grid-cols-2">
+            <ButtonsCard />
+            <FormCard />
+            <StatusCard />
+            <TokensCard />
+            <ControlsCard />
+            <OverlaysCard />
           </div>
-          <ThemeSwitcher />
-        </header>
-        <div className="grid gap-6 md:grid-cols-2">
-          <ButtonsCard />
-          <FormCard />
-          <StatusCard />
-          <TokensCard />
-        </div>
-      </main>
+        </main>
+      </div>
       <Toaster />
     </TooltipProvider>
   );

@@ -26,7 +26,9 @@
     "noUncheckedSideEffectImports": true, // Reject unresolved side-effect-only imports.
     "noUnusedLocals": true, // Reject unread local declarations.
     "noUnusedParameters": true, // Reject unread parameters; prefix intentional placeholders with an underscore.
-    "skipLibCheck": false, // Type-check dependency declarations instead of accepting inconsistent types.
+    // Skipped because recharts' @reduxjs/toolkit declarations fail exactOptionalPropertyTypes upstream (TS2344, TS2420).
+    // Only .d.ts files are skipped: first-party code and this package's shipped .tsx sources are still fully checked.
+    "skipLibCheck": true,
     "verbatimModuleSyntax": true // Make type-only imports and emitted module behavior explicit.
   }
 }

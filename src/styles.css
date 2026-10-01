@@ -16,6 +16,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Installed web apps draw under the notch and home bar: pt-safe-top, h-safe-top, pb-safe-bottom, and so on. */
+@theme {
+  --spacing-safe-top: env(safe-area-inset-top);
+  --spacing-safe-right: env(safe-area-inset-right);
+  --spacing-safe-bottom: env(safe-area-inset-bottom);
+  --spacing-safe-left: env(safe-area-inset-left);
+  --text-2xs: 0.625rem; /* 10px, for chart axes and dense labels. */
+  --text-2xs--line-height: 0.875rem;
+}
+
 @theme inline {
   --font-sans: "Geist Variable", sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
@@ -110,6 +120,37 @@
   --border: rgb(225 225 225 / 12%);
   --input: rgb(225 225 225 / 16%);
   --ring: #bb9af7;
+  --chart-1: #668ce0;
+  --chart-2: #d07338;
+  --chart-3: #03a78a;
+  --chart-4: #9c7bd5;
+  --chart-5: #b4853e;
+}
+
+/* Tokyo Night: the palette Money, Hub, and Lights used before this package, with muted text lifted to clear contrast. */
+[data-theme="tokyo-night"] {
+  color-scheme: dark;
+  --radius: 0.75rem;
+  --background: #1a1b26;
+  --foreground: #c0caf5;
+  --card: #1f2335;
+  --card-foreground: #c0caf5;
+  --popover: #1f2335;
+  --popover-foreground: #c0caf5;
+  --primary: #7aa2f7;
+  --primary-foreground: #16161e;
+  --secondary: #24283b;
+  --secondary-foreground: #c0caf5;
+  --muted: #24283b;
+  --muted-foreground: #9aa5ce;
+  --accent: #292e42;
+  --accent-foreground: #c0caf5;
+  --destructive: #f7768e;
+  --success: #9ece6a;
+  --warning: #e0af68;
+  --border: rgb(130 139 184 / 13%);
+  --input: rgb(130 139 184 / 20%);
+  --ring: #7aa2f7;
   --chart-1: #668ce0;
   --chart-2: #d07338;
   --chart-3: #03a78a;

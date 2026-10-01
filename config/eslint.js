@@ -91,7 +91,8 @@ export function config(tsconfigRootDir) {
         "@typescript-eslint/strict-void-return": "error", // Reject discarded return values through void callbacks.
         // Require exhaustive union switches and defaults for open-ended values.
         "@typescript-eslint/switch-exhaustiveness-check": ["error", { allowDefaultCaseForExhaustiveSwitch: false, considerDefaultExhaustiveForUnions: false, requireDefaultForNonUnion: true }],
-        "unicorn/name-replacements": ["error", { replacements: { props: false, ref: false } }], // Spell names out, except React's own props and ref.
+        "unicorn/name-replacements": ["error", { replacements: { props: false, ref: false, utils: false } }], // Spell names out, except React's props and ref and shadcn's lib/utils.
+        "unicorn/max-nested-calls": "off", // Nested zod schemas (z.array(z.object(...))) are the idiom, not a smell.
         "unicorn/no-null": "off", // React and the DOM use null as their empty value.
         "unicorn/single-line-block-comment-style": "off", // One-line JSDoc summaries are fine.
         // Design system: pages place components; components own their look. Containers also accept spacing.
