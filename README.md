@@ -76,7 +76,15 @@ This guide assumes a Vite + React 19 app with Tailwind v4 and pnpm.
    To add app-specific rules, wrap it with `defineConfig` from `eslint/config`: `defineConfig(config(import.meta.dirname), { rules: { ... } })`. Remove the ESLint plugins the old config imported (such as `typescript-eslint` and `eslint-plugin-react-hooks`) from `package.json`; the package brings its own.
 
 5. Point Prettier at the shared config by adding `"prettier": "@jacobragsdale/ui/prettier"` to `package.json` and deleting any other Prettier config file.
-6. Apply the saved theme before the first render, in `src/main.tsx`:
+6. Add the package's Vite plugin to `vite.config.ts`. Without it, `pnpm dev` shows a blank page, because Vite does not pre-bundle the dependencies of the package's `.tsx` sources:
+
+   ```ts
+   import { ui } from "@jacobragsdale/ui/vite";
+
+   export default defineConfig({ plugins: [react(), tailwindcss(), ui()] });
+   ```
+
+7. Apply the saved theme before the first render, in `src/main.tsx`:
 
    ```tsx
    import { initTheme } from "@jacobragsdale/ui/lib/theme";
@@ -84,8 +92,8 @@ This guide assumes a Vite + React 19 app with Tailwind v4 and pnpm.
    initTheme();
    ```
 
-7. Change imports from the app's own shadcn copies (`@/components/ui/button`) to `@jacobragsdale/ui/components/ui/button`, then delete the local copies of every component the package has (`ls node_modules/@jacobragsdale/ui/src/components/ui`). Replace the app's `components.json` with [the template's](template/components.json): it tells `@shadcn/lint` that the theme is the app's `src/index.css`, so colours and utilities the app declares there pass the lint. If app code calls `cn`, import it from `@jacobragsdale/ui/lib/utils` instead of the local helper.
-8. Run `pnpm typecheck` and `pnpm lint`, and fix what they report. Most errors in an older app are missing return types and `className` overrides on components; [DESIGN.md](DESIGN.md) says what to use instead.
+8. Change imports from the app's own shadcn copies (`@/components/ui/button`) to `@jacobragsdale/ui/components/ui/button`, then delete the local copies of every component the package has (`ls node_modules/@jacobragsdale/ui/src/components/ui`). Replace the app's `components.json` with [the template's](template/components.json): it tells `@shadcn/lint` that the theme is the app's `src/index.css`, so colours and utilities the app declares there pass the lint. If app code calls `cn`, import it from `@jacobragsdale/ui/lib/utils` instead of the local helper.
+9. Run `pnpm typecheck` and `pnpm lint`, and fix what they report. Most errors in an older app are missing return types and `className` overrides on components; [DESIGN.md](DESIGN.md) says what to use instead.
 
 The migration is done when `pnpm typecheck`, `pnpm lint`, and `pnpm build` pass and `pnpm dev` shows the app in Neon Void.
 
@@ -140,7 +148,7 @@ pnpm shadcn add COMPONENT
 
 `COMPONENT` is a name from the [shadcn/ui component list](https://ui.shadcn.com/docs/components), such as `popover`. The CLI writes it to `src/components/ui/` and adds its dependencies, and apps import it as `@jacobragsdale/ui/components/ui/COMPONENT` with no export list to update. If `pnpm typecheck` then reports `Cannot find module` for a package the new file imports, `pnpm add` that package; the CLI missed `@base-ui/react` the first time.
 
-Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Two files carry local edits that `pnpm shadcn add --overwrite` would undo: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`, and `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`.
+Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Four files carry local edits that `pnpm shadcn add --overwrite` would undo, each marked `Local edit`: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`; `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`; `slider.tsx` draws one thumb for a single-number `value` (upstream drew two) and puts `aria-label` on the thumb's input; and `badge.tsx` adds `success` and `warning` variants.
 
 ## Reference
 
@@ -155,6 +163,7 @@ Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier
 | `@jacobragsdale/ui/lib/toast`                 | `toast` from sonner, matching the `Toaster` in `components/ui/sonner`.        |
 | `@jacobragsdale/ui/lib/utils`                 | `cn`, the class-merging helper the components use.                            |
 | `@jacobragsdale/ui/eslint`                    | `config(rootDir)`: the flat ESLint config.                                    |
+| `@jacobragsdale/ui/vite`                      | `ui()`: the Vite plugin every app needs for `pnpm dev`.                       |
 | `@jacobragsdale/ui/prettier`                  | The Prettier config.                                                          |
 | `@jacobragsdale/ui/tsconfig.json`             | The base TypeScript config for Vite + React.                                  |
 

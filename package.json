@@ -17,6 +17,10 @@
     "./hooks/*": "./src/hooks/*.ts",
     "./styles.css": "./src/styles.css",
     "./eslint": "./config/eslint.js",
+    "./vite": {
+      "types": "./config/vite.d.ts",
+      "default": "./config/vite.js"
+    },
     "./prettier": "./config/prettier.js",
     "./tsconfig.json": "./config/tsconfig.json"
   },

@@ -6,7 +6,7 @@ These rules apply to every app built on `@jacobragsdale/ui`. The shared ESLint c
 
 - Import components from `@jacobragsdale/ui/components/ui/<name>` (shadcn/ui on Base UI, `base-nova` style) and `@jacobragsdale/ui/components/theme-switcher`.
 - On a shared component, `className` may only place it: margin, width, flex and grid placement. `Card`, and any part whose name ends in `Content`, `Header`, or `Footer`, also accept padding and gap. **lint** (`shadcn/no-restyle`)
-- Change appearance with the component's props instead: `Button` takes `variant` (`default`, `secondary`, `outline`, `ghost`, `destructive`, `link`) and `size` (`default`, `xs`, `sm`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg`); `Badge` and `Alert` take `variant`.
+- Change appearance with the component's props instead: `Button` takes `variant` (`default`, `secondary`, `outline`, `ghost`, `destructive`, `link`) and `size` (`default`, `xs`, `sm`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg`); `Badge` takes `variant`, including `success` and `warning` for status; `Alert` takes `variant`.
 - Pass `className` as a static string so it can be checked. **lint** (`shadcn/require-static-classes`)
 - If no variant fits, add one to the component in this repository and release it. Do not restyle it in the app.
 
@@ -48,7 +48,9 @@ When a size or colour comes from data, such as a budget bar's width, a category'
 <div className="h-2 w-(--fill) rounded-full bg-chart-1" style={{ "--fill": `${String(percent)}%` }} />
 ```
 
-`style` may set CSS variables and nothing else; the linter rejects other properties. Colours that belong to the app rather than the data, such as a fixed set of gradient swatches, go in the app's stylesheet as `@utility` or `@theme` entries after the `@import`.
+`style` may set CSS variables and nothing else; the linter rejects other properties. Colours that belong to the app rather than the data, such as a fixed set of gradient swatches, go in the app's stylesheet as `@utility` entries after the `@import`.
+
+Do not declare `--color-*` tokens in an app. `@shadcn/lint` ignores token declarations inside `node_modules`, so the first token an app declares hides every token this package provides, and `text-muted-foreground` starts failing. For an app-only colour, use a `@utility`, or a CSS variable read with `bg-(--name)`. If several apps need the colour, add the token here.
 
 ## Themes
 

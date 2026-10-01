@@ -94,6 +94,9 @@ export function config(tsconfigRootDir) {
         "unicorn/name-replacements": ["error", { replacements: { props: false, ref: false, utils: false } }], // Spell names out, except React's props and ref and shadcn's lib/utils.
         "unicorn/max-nested-calls": "off", // Nested zod schemas (z.array(z.object(...))) are the idiom, not a smell.
         "unicorn/no-null": "off", // React and the DOM use null as their empty value.
+        // A synchronous callback (event handler, effect) can only start async work as `promise.catch(handleError)`:
+        // no-floating-promises requires the handler, and its ignoreVoid/ignoreIIFE settings forbid the alternatives.
+        "unicorn/prefer-await": "off",
         "unicorn/single-line-block-comment-style": "off", // One-line JSDoc summaries are fine.
         // Design system: pages place components; components own their look. Containers also accept spacing.
         "shadcn/no-restyle": ["error", { allow: ["layout"], contracts: [{ pattern: "^Card$|(Content|Header|Footer)$", allow: ["layout", "spacing"] }] }],
