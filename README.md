@@ -148,7 +148,7 @@ pnpm shadcn add COMPONENT
 
 `COMPONENT` is a name from the [shadcn/ui component list](https://ui.shadcn.com/docs/components), such as `popover`. The CLI writes it to `src/components/ui/` and adds its dependencies, and apps import it as `@jacobragsdale/ui/components/ui/COMPONENT` with no export list to update. If `pnpm typecheck` then reports `Cannot find module` for a package the new file imports, `pnpm add` that package; the CLI missed `@base-ui/react` the first time.
 
-Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Four files carry local edits that `pnpm shadcn add --overwrite` would undo, each marked `Local edit`: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`; `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`; `slider.tsx` draws one thumb for a single-number `value` (upstream drew two) and puts `aria-label` on the thumb's input; and `badge.tsx` adds `success` and `warning` variants.
+Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Five files carry local edits that `pnpm shadcn add --overwrite` would undo, each marked `Local edit`: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`; `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`; `slider.tsx` draws one thumb for a single-number `value` (upstream drew two) and puts `aria-label` on the thumb's input; `badge.tsx` adds `success` and `warning` variants; and `sheet.tsx` pads the screen edges a sheet touches for the notch and home bar.
 
 ## Reference
 
