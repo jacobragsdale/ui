@@ -37,7 +37,7 @@ Use only these tokens, as Tailwind utilities (`bg-card`, `text-muted-foreground`
 - Use the theme's spacing, radius (`rounded-sm` … `rounded-4xl`), and type scales. Arbitrary values such as `p-[13px]` fail. **lint** (`shadcn/no-arbitrary-values`)
 - Style with classes. `style={{ }}` and `<style>` fail. **lint** (`shadcn/no-inline-styles`)
 - Classes must exist in Tailwind or the theme; typos such as `rounded-huge` fail. **lint** (`shadcn/no-unknown-classes`)
-- Fonts: `font-sans` (Geist, the default), `font-heading`, and `font-mono` (JetBrains Mono) for code and tabular figures. `text-2xs` (10px) is the smallest step, for chart axes and dense labels.
+- Fonts: `font-sans`, `font-heading`, and `font-mono` for code and tabular figures. Each theme picks its own faces (Neon Void uses Geist and JetBrains Mono), so do not size a layout to one font's metrics. `text-2xs` (10px) is the smallest step, for chart axes and dense labels.
 - Installed web apps draw under the notch and home bar. Pad for them with `pt-safe-top`, `pb-safe-bottom`, `pl-safe-left`, and `pr-safe-right`; the same names work with any spacing utility (`h-safe-top`, `top-safe-top`). Put them on an outer wrapper, because `pt-safe-top` replaces the element's own top padding rather than adding to it.
 
 ## Values from data
@@ -54,4 +54,9 @@ Do not declare `--color-*` tokens in an app. `@shadcn/lint` ignores token declar
 
 ## Themes
 
-Themes change colour tokens and radius only, so a page that follows these rules looks right in every theme. The themes are **Neon Void** (the default) and **Grok Night**, matching the terminal palettes in [jacobragsdale/theme](https://github.com/jacobragsdale/theme), and **Tokyo Night**, the palette Money, Hub, and Lights used before this package. All three are dark; there is no light theme.
+Themes change the colour tokens, radius, and fonts, and restyle the shared components themselves: borders, shadows, corner shapes, and the page background. A page that follows these rules looks right in every theme, because only the components and tokens change. Styling your own markup to imitate one theme breaks the others.
+
+- **Dark:** Neon Void (the default) and Grok Night, matching the terminal palettes in [jacobragsdale/theme](https://github.com/jacobragsdale/theme); Tokyo Night, the palette Money, Hub, and Lights used before this package; Synthwave, Cyberpunk, Phosphor, Blueprint, Art Deco, Liquid Glass, Dracula, Nord, Catppuccin, and Gruvbox.
+- **Light:** Neo Brutalism, Windows 98, Aqua, Editorial, Notebook, Clay, Game Boy, and Solarized.
+
+Light themes exist, so never assume a dark page: use the tokens rather than `dark:` variants or fixed white text.

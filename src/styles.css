@@ -1,15 +1,44 @@
 /*
- * The one stylesheet an app imports. Palettes come from ~/dev/theme (the terminal theme tool), so the web and the
- * terminal match. Text tokens clear 5.5:1 on every surface they sit on; chart-1..5 are the palette's hues stepped into
- * the dark chart lightness band and checked for colour-vision deficiency with the dataviz validator.
+ * The one stylesheet an app imports. Neon Void and Grok Night come from ~/dev/theme (the terminal theme tool), so the web
+ * and the terminal match. Text tokens clear 5.5:1 on every surface they sit on; chart-1..5 are checked for colour-vision
+ * deficiency against the theme's card with the dataviz validator.
  *
- * Add a theme: copy a [data-theme] block, change the values, and register it in src/lib/theme.ts.
+ * A theme is two blocks: tokens (colours, radius, fonts) in a [data-theme] block, and optionally a "Theme structure" block
+ * that reshapes components by their data-slot. Register the id in src/lib/theme.ts.
  */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/jetbrains-mono";
+/* Theme fonts. Browsers only download a font file when the active theme renders text in it. */
+@import "@fontsource-variable/fira-code";
+@import "@fontsource-variable/fredoka";
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/josefin-sans";
+@import "@fontsource-variable/nunito";
+@import "@fontsource-variable/orbitron";
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/pixelify-sans";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/rubik";
+@import "@fontsource-variable/source-serif-4";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+@import "@fontsource/limelight";
+@import "@fontsource/patrick-hand";
+@import "@fontsource/press-start-2p";
+@import "@fontsource/rajdhani/400.css";
+@import "@fontsource/rajdhani/500.css";
+@import "@fontsource/rajdhani/600.css";
+@import "@fontsource/rajdhani/700.css";
+@import "@fontsource/share-tech-mono";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+@import "@fontsource/vt323";
 
 /* Tailwind skips node_modules, so scan this package's components from wherever it is installed. */
 @source "./components";
@@ -24,12 +53,13 @@
   --spacing-safe-left: env(safe-area-inset-left);
   --text-2xs: 0.625rem; /* 10px, for chart axes and dense labels. */
   --text-2xs--line-height: 0.875rem;
-}
-
-@theme inline {
+  /* Not inline, so a theme block can swap them. */
   --font-sans: "Geist Variable", sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
   --font-heading: var(--font-sans);
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -158,6 +188,596 @@
   --chart-5: #b4853e;
 }
 
+/* Synthwave: an '84 sunset of hot pink and cyan over a neon grid, with Orbitron headings. */
+[data-theme="synthwave"] {
+  color-scheme: dark;
+  --radius: 0.375rem;
+  --font-sans: "Outfit Variable", sans-serif;
+  --font-heading: "Orbitron Variable", sans-serif;
+  --background: #1a1230;
+  --foreground: #f5efff;
+  --card: #231940;
+  --card-foreground: #f5efff;
+  --popover: #231940;
+  --popover-foreground: #f5efff;
+  --primary: #ff7edb;
+  --primary-foreground: #1a1230;
+  --secondary: #2e2250;
+  --secondary-foreground: #f5efff;
+  --muted: #2e2250;
+  --muted-foreground: #c3b4e2;
+  --accent: #3a2b63;
+  --accent-foreground: #f5efff;
+  --destructive: #ff8197;
+  --success: #72f1b8;
+  --warning: #fede5d;
+  --border: rgb(255 126 219 / 20%);
+  --input: rgb(255 126 219 / 30%);
+  --ring: #36f9f6;
+  --chart-1: #119bbe;
+  --chart-2: #c02a82;
+  --chart-3: #05a464;
+  --chart-4: #8a6bf7;
+  --chart-5: #9d7907;
+}
+
+/* Cyberpunk: black and signal yellow, cut corners, condensed Rajdhani. */
+[data-theme="cyberpunk"] {
+  color-scheme: dark;
+  --radius: 0rem;
+  --font-sans: "Rajdhani", sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+  --background: #0a0a0f;
+  --foreground: #ece9d4;
+  --card: #12121a;
+  --card-foreground: #ece9d4;
+  --popover: #12121a;
+  --popover-foreground: #ece9d4;
+  --primary: #fcee0a;
+  --primary-foreground: #0a0a0f;
+  --secondary: #1b1b26;
+  --secondary-foreground: #ece9d4;
+  --muted: #1b1b26;
+  --muted-foreground: #b0ad95;
+  --accent: #262633;
+  --accent-foreground: #ece9d4;
+  --destructive: #ff6680;
+  --success: #00f59b;
+  --warning: #ff9f1c;
+  --border: rgb(252 238 10 / 18%);
+  --input: rgb(252 238 10 / 28%);
+  --ring: #02d7f2;
+  --chart-1: #1592b4;
+  --chart-2: #c01247;
+  --chart-3: #ab9104;
+  --chart-4: #8548cf;
+  --chart-5: #c66607;
+}
+
+/* Phosphor: a green CRT terminal, monospace throughout, with glow and scanlines. */
+[data-theme="phosphor"] {
+  color-scheme: dark;
+  --radius: 0rem;
+  --font-sans: "JetBrains Mono Variable", monospace;
+  --font-heading: "VT323", monospace;
+  --background: #050a06;
+  --foreground: #7dff9b;
+  --card: #0a130c;
+  --card-foreground: #7dff9b;
+  --popover: #0a130c;
+  --popover-foreground: #7dff9b;
+  --primary: #c4ffd2;
+  --primary-foreground: #050a06;
+  --secondary: #102015;
+  --secondary-foreground: #7dff9b;
+  --muted: #102015;
+  --muted-foreground: #4fcf72;
+  --accent: #163020;
+  --accent-foreground: #7dff9b;
+  --destructive: #ff6b5e;
+  --success: #b8ff5c;
+  --warning: #ffb000;
+  --border: rgb(125 255 155 / 22%);
+  --input: rgb(125 255 155 / 32%);
+  --ring: #7dff9b;
+  --chart-1: #0eab5c;
+  --chart-2: #8e5802;
+  --chart-3: #089ecb;
+  --chart-4: #9632ae;
+  --chart-5: #6d7402;
+}
+
+/* Blueprint: white linework on drafting blue, a grid underneath, IBM Plex Mono in capitals. */
+[data-theme="blueprint"] {
+  color-scheme: dark;
+  --radius: 0rem;
+  --font-sans: "IBM Plex Mono", monospace;
+  --font-mono: "IBM Plex Mono", monospace;
+  --background: #0d3769;
+  --foreground: #f2f7ff;
+  --card: #0f3f78;
+  --card-foreground: #f2f7ff;
+  --popover: #0f3f78;
+  --popover-foreground: #f2f7ff;
+  --primary: #ffd866;
+  --primary-foreground: #0d3769;
+  --secondary: #154a8a;
+  --secondary-foreground: #f2f7ff;
+  --muted: #154a8a;
+  --muted-foreground: #c3d7f2;
+  --accent: #1b5599;
+  --accent-foreground: #f2f7ff;
+  --destructive: #ffc2b9;
+  --success: #9cf0c0;
+  --warning: #ffc98f;
+  --border: rgb(242 247 255 / 30%);
+  --input: rgb(242 247 255 / 45%);
+  --ring: #ffd866;
+  --chart-1: #1491cf;
+  --chart-2: #e85c0c;
+  --chart-3: #16a692;
+  --chart-4: #ac8602;
+  --chart-5: #dc54b7;
+}
+
+/* Art Deco: black lacquer and gold leaf, double frames, Limelight capitals over Josefin Sans. */
+[data-theme="art-deco"] {
+  color-scheme: dark;
+  --radius: 0rem;
+  --font-sans: "Josefin Sans Variable", sans-serif;
+  --font-heading: "Limelight", serif;
+  --background: #0d0c0a;
+  --foreground: #f3ead2;
+  --card: #15130f;
+  --card-foreground: #f3ead2;
+  --popover: #15130f;
+  --popover-foreground: #f3ead2;
+  --primary: #e2c069;
+  --primary-foreground: #0d0c0a;
+  --secondary: #1f1c16;
+  --secondary-foreground: #f3ead2;
+  --muted: #1f1c16;
+  --muted-foreground: #bfae88;
+  --accent: #2a261d;
+  --accent-foreground: #f3ead2;
+  --destructive: #ff8a78;
+  --success: #8fd6a8;
+  --warning: #f2a65a;
+  --border: rgb(226 192 105 / 26%);
+  --input: rgb(226 192 105 / 36%);
+  --ring: #e2c069;
+  --chart-1: #057cf3;
+  --chart-2: #84680a;
+  --chart-3: #17a792;
+  --chart-4: #c41b24;
+  --chart-5: #8b51da;
+}
+
+/* Liquid Glass: frosted, translucent capsules floating over an aurora. */
+[data-theme="liquid-glass"] {
+  color-scheme: dark;
+  --radius: 1.25rem;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", sans-serif;
+  --background: #0a0c16;
+  --foreground: #f0f3ff;
+  --card: #161a2c;
+  --card-foreground: #f0f3ff;
+  --popover: #161a2c;
+  --popover-foreground: #f0f3ff;
+  --primary: #8fb8ff;
+  --primary-foreground: #0a0c16;
+  --secondary: #20253b;
+  --secondary-foreground: #f0f3ff;
+  --muted: #20253b;
+  --muted-foreground: #aeb6d4;
+  --accent: #2a3049;
+  --accent-foreground: #f0f3ff;
+  --destructive: #ff8a9a;
+  --success: #7ee0b0;
+  --warning: #ffd27a;
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 16%);
+  --ring: #8fb8ff;
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+}
+
+/* Dracula: the vampire editor palette, with Fira Code headings. */
+[data-theme="dracula"] {
+  color-scheme: dark;
+  --radius: 0.5rem;
+  --font-heading: "Fira Code Variable", monospace;
+  --font-mono: "Fira Code Variable", monospace;
+  --background: #21222c;
+  --foreground: #f8f8f2;
+  --card: #282a36;
+  --card-foreground: #f8f8f2;
+  --popover: #282a36;
+  --popover-foreground: #f8f8f2;
+  --primary: #bd93f9;
+  --primary-foreground: #21222c;
+  --secondary: #2c2e3b;
+  --secondary-foreground: #f8f8f2;
+  --muted: #2c2e3b;
+  --muted-foreground: #b6bedf;
+  --accent: #44475a;
+  --accent-foreground: #f8f8f2;
+  --destructive: #ff9494;
+  --success: #50fa7b;
+  --warning: #f1fa8c;
+  --border: rgb(98 114 164 / 35%);
+  --input: rgb(98 114 164 / 50%);
+  --ring: #ff79c6;
+  --chart-1: #a469f3;
+  --chart-2: #0095b0;
+  --chart-3: #e94f96;
+  --chart-4: #019358;
+  --chart-5: #c4620c;
+}
+
+/* Nord: arctic frost on polar night, set in Rubik, with soft elevation. */
+[data-theme="nord"] {
+  color-scheme: dark;
+  --radius: 0.375rem;
+  --font-sans: "Rubik Variable", sans-serif;
+  --background: #20242c;
+  --foreground: #eceff4;
+  --card: #272c36;
+  --card-foreground: #eceff4;
+  --popover: #272c36;
+  --popover-foreground: #eceff4;
+  --primary: #88c0d0;
+  --primary-foreground: #20242c;
+  --secondary: #2e3440;
+  --secondary-foreground: #eceff4;
+  --muted: #2e3440;
+  --muted-foreground: #b8c1d1;
+  --accent: #3b4252;
+  --accent-foreground: #eceff4;
+  --destructive: #f0a0a7;
+  --success: #a3be8c;
+  --warning: #ebcb8b;
+  --border: rgb(216 222 233 / 12%);
+  --input: rgb(216 222 233 / 18%);
+  --ring: #88c0d0;
+  --chart-1: #148dc2;
+  --chart-2: #ea5f06;
+  --chart-3: #17a986;
+  --chart-4: #bd54ce;
+  --chart-5: #9d7d0e;
+}
+
+/* Catppuccin: Mocha's soothing pastels, rounded Nunito, pill buttons. */
+[data-theme="catppuccin"] {
+  color-scheme: dark;
+  --radius: 1rem;
+  --font-sans: "Nunito Variable", sans-serif;
+  --background: #181825;
+  --foreground: #cdd6f4;
+  --card: #1e1e2e;
+  --card-foreground: #cdd6f4;
+  --popover: #1e1e2e;
+  --popover-foreground: #cdd6f4;
+  --primary: #cba6f7;
+  --primary-foreground: #1e1e2e;
+  --secondary: #2a2b3d;
+  --secondary-foreground: #cdd6f4;
+  --muted: #2a2b3d;
+  --muted-foreground: #a6adc8;
+  --accent: #313244;
+  --accent-foreground: #cdd6f4;
+  --destructive: #f38ba8;
+  --success: #a6e3a1;
+  --warning: #f9e2af;
+  --border: rgb(205 214 244 / 10%);
+  --input: rgb(205 214 244 / 16%);
+  --ring: #b4befe;
+  --chart-1: #357af7;
+  --chart-2: #ac5101;
+  --chart-3: #00a597;
+  --chart-4: #8d47cc;
+  --chart-5: #9c7601;
+}
+
+/* Gruvbox: retro groove browns and ambers, IBM Plex, chunky offset shadows. */
+[data-theme="gruvbox"] {
+  color-scheme: dark;
+  --radius: 0.25rem;
+  --font-sans: "IBM Plex Sans Variable", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --background: #1d2021;
+  --foreground: #ebdbb2;
+  --card: #282828;
+  --card-foreground: #ebdbb2;
+  --popover: #282828;
+  --popover-foreground: #ebdbb2;
+  --primary: #fabd2f;
+  --primary-foreground: #1d2021;
+  --secondary: #2b2a29;
+  --secondary-foreground: #ebdbb2;
+  --muted: #2b2a29;
+  --muted-foreground: #bdae93;
+  --accent: #3c3836;
+  --accent-foreground: #ebdbb2;
+  --destructive: #ff8a7a;
+  --success: #b8bb26;
+  --warning: #fe8f2c;
+  --border: rgb(235 219 178 / 12%);
+  --input: rgb(235 219 178 / 18%);
+  --ring: #fabd2f;
+  --chart-1: #0385a4;
+  --chart-2: #b25905;
+  --chart-3: #78a106;
+  --chart-4: #d7408f;
+  --chart-5: #9e7f11;
+}
+
+/* Neo Brutalism: cream paper, black 2px outlines, hard offset shadows, Space Grotesk. */
+[data-theme="neo-brutalism"] {
+  color-scheme: light;
+  --radius: 0rem;
+  --font-sans: "Space Grotesk Variable", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  --background: #fff4dc;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --primary: #2b2bff;
+  --primary-foreground: #ffffff;
+  --secondary: #ffd84d;
+  --secondary-foreground: #111111;
+  --muted: #fbe6b4;
+  --muted-foreground: #464646;
+  --accent: #b8e7ff;
+  --accent-foreground: #111111;
+  --destructive: #b00020;
+  --success: #05612b;
+  --warning: #774700;
+  --border: #111111;
+  --input: #111111;
+  --ring: #2b2bff;
+  --chart-1: #4a7afb;
+  --chart-2: #a33301;
+  --chart-3: #0fa684;
+  --chart-4: #950668;
+  --chart-5: #a5840d;
+}
+
+/* Windows 98: silver chrome, bevelled edges, navy title bars, Tahoma. */
+[data-theme="windows-98"] {
+  color-scheme: light;
+  --radius: 0rem;
+  --font-sans: Tahoma, Verdana, "DejaVu Sans", sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --background: #c0c0c0;
+  --foreground: #000000;
+  --card: #c0c0c0;
+  --card-foreground: #000000;
+  --popover: #c0c0c0;
+  --popover-foreground: #000000;
+  --primary: #000080;
+  --primary-foreground: #ffffff;
+  --secondary: #c0c0c0;
+  --secondary-foreground: #000000;
+  --muted: #d4d0c8;
+  --muted-foreground: #383838;
+  --accent: #000080;
+  --accent-foreground: #ffffff;
+  --destructive: #800000;
+  --success: #004000;
+  --warning: #4d3600;
+  --border: #808080;
+  --input: #808080;
+  --ring: #000000;
+  --chart-1: #2c5dda;
+  --chart-2: #8d3c04;
+  --chart-3: #078e7c;
+  --chart-4: #a24fd1;
+  --chart-5: #827d0a;
+}
+
+/* Aqua: Mac OS X pinstripes, glossy gel capsules, Lucida Grande. */
+[data-theme="aqua"] {
+  color-scheme: light;
+  --radius: 0.375rem;
+  --font-sans: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: Monaco, Menlo, "JetBrains Mono Variable", monospace;
+  --background: #e8e8e8;
+  --foreground: #111111;
+  --card: #f6f6f6;
+  --card-foreground: #111111;
+  --popover: #f6f6f6;
+  --popover-foreground: #111111;
+  --primary: #1554b0;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e4e4;
+  --secondary-foreground: #111111;
+  --muted: #e4e4e4;
+  --muted-foreground: #4a4a4a;
+  --accent: #1f5fbf;
+  --accent-foreground: #ffffff;
+  --destructive: #a3121a;
+  --success: #146126;
+  --warning: #744500;
+  --border: rgb(0 0 0 / 16%);
+  --input: rgb(0 0 0 / 30%);
+  --ring: #5b9dd9;
+  --chart-1: #098ef7;
+  --chart-2: #843d01;
+  --chart-3: #0ca271;
+  --chart-4: #6436bf;
+  --chart-5: #b08608;
+}
+
+/* Editorial: newsprint, ink-black rules, Playfair Display over Source Serif. */
+[data-theme="editorial"] {
+  color-scheme: light;
+  --radius: 0rem;
+  --font-sans: "Source Serif 4 Variable", Georgia, serif;
+  --font-heading: "Playfair Display Variable", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --background: #f6f1e6;
+  --foreground: #1b1712;
+  --card: #fbf8f0;
+  --card-foreground: #1b1712;
+  --popover: #fbf8f0;
+  --popover-foreground: #1b1712;
+  --primary: #1b1712;
+  --primary-foreground: #f6f1e6;
+  --secondary: #ece4d3;
+  --secondary-foreground: #1b1712;
+  --muted: #ece4d3;
+  --muted-foreground: #594f43;
+  --accent: #e5dac3;
+  --accent-foreground: #1b1712;
+  --destructive: #a3251b;
+  --success: #2e5a28;
+  --warning: #744600;
+  --border: rgb(27 23 18 / 22%);
+  --input: rgb(27 23 18 / 45%);
+  --ring: #a3251b;
+  --chart-1: #005a8d;
+  --chart-2: #893800;
+  --chart-3: #0da169;
+  --chart-4: #8c1d9a;
+  --chart-5: #ab8806;
+}
+
+/* Notebook: ruled paper, ballpoint blue, hand-drawn outlines, Patrick Hand. */
+[data-theme="notebook"] {
+  color-scheme: light;
+  --radius: 0.5rem;
+  --font-sans: "Patrick Hand", "Comic Sans MS", cursive;
+  --background: #fbf9f1;
+  --foreground: #2b2b2b;
+  --card: #fffefa;
+  --card-foreground: #2b2b2b;
+  --popover: #fffefa;
+  --popover-foreground: #2b2b2b;
+  --primary: #1f3fbf;
+  --primary-foreground: #fffefa;
+  --secondary: #f1ede0;
+  --secondary-foreground: #2b2b2b;
+  --muted: #f1ede0;
+  --muted-foreground: #565656;
+  --accent: #fff0a0;
+  --accent-foreground: #2b2b2b;
+  --destructive: #a8221b;
+  --success: #285c28;
+  --warning: #744500;
+  --border: rgb(43 43 43 / 28%);
+  --input: rgb(43 43 43 / 60%);
+  --ring: #1f3fbf;
+  --chart-1: #0d88fa;
+  --chart-2: #8b3403;
+  --chart-3: #14a580;
+  --chart-4: #900e8a;
+  --chart-5: #a88803;
+}
+
+/* Clay: inflated pastel surfaces, pillowy buttons, rounded Fredoka. */
+[data-theme="clay"] {
+  color-scheme: light;
+  --radius: 1.25rem;
+  --font-sans: "Fredoka Variable", sans-serif;
+  --background: #ebe7f7;
+  --foreground: #2b2343;
+  --card: #f5f2fd;
+  --card-foreground: #2b2343;
+  --popover: #f5f2fd;
+  --popover-foreground: #2b2343;
+  --primary: #5a32c0;
+  --primary-foreground: #ffffff;
+  --secondary: #e1dbf3;
+  --secondary-foreground: #2b2343;
+  --muted: #e1dbf3;
+  --muted-foreground: #554b70;
+  --accent: #d9cff7;
+  --accent-foreground: #2b2343;
+  --destructive: #9c1a3e;
+  --success: #1a5e3b;
+  --warning: #6f4200;
+  --border: rgb(43 35 67 / 10%);
+  --input: rgb(43 35 67 / 14%);
+  --ring: #5a32c0;
+  --chart-1: #6e45ce;
+  --chart-2: #9c3102;
+  --chart-3: #169d8a;
+  --chart-4: #96065d;
+  --chart-5: #ab8312;
+}
+
+/* Game Boy: the DMG's four greens, pixel-notched frames, Press Start 2P. */
+[data-theme="game-boy"] {
+  color-scheme: light;
+  --radius: 0rem;
+  --font-sans: "Pixelify Sans Variable", monospace;
+  --font-heading: "Press Start 2P", monospace;
+  --background: #9bbc0f;
+  --foreground: #0f380f;
+  --card: #9bbc0f;
+  --card-foreground: #0f380f;
+  --popover: #9bbc0f;
+  --popover-foreground: #0f380f;
+  --primary: #0f380f;
+  --primary-foreground: #9bbc0f;
+  --secondary: #8bac0f;
+  --secondary-foreground: #0a250a;
+  --muted: #a9c62a;
+  --muted-foreground: #173917;
+  --accent: #8bac0f;
+  --accent-foreground: #0a250a;
+  --destructive: #5c0a1a;
+  --success: #0c3a00;
+  --warning: #3f2a00;
+  --border: #306230;
+  --input: #306230;
+  --ring: #306230;
+  --chart-1: #0454ba;
+  --chart-2: #aa0007;
+  --chart-3: #008f7e;
+  --chart-4: #8e1894;
+  --chart-5: #9a5603;
+}
+
+/* Solarized: Ethan Schoonover's light palette, its accents deepened for 5.5:1 text, set in Inter. */
+[data-theme="solarized"] {
+  color-scheme: light;
+  --radius: 0.375rem;
+  --font-sans: "Inter Variable", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --background: #fdf6e3;
+  --foreground: #073642;
+  --card: #fdf6e3;
+  --card-foreground: #073642;
+  --popover: #fdf6e3;
+  --popover-foreground: #073642;
+  --primary: #185a8c;
+  --primary-foreground: #fdf6e3;
+  --secondary: #eee8d5;
+  --secondary-foreground: #073642;
+  --muted: #eee8d5;
+  --muted-foreground: #46595f;
+  --accent: #e6dfc8;
+  --accent-foreground: #073642;
+  --destructive: #a12623;
+  --success: #4d5a00;
+  --warning: #6e5200;
+  --border: rgb(7 54 66 / 14%);
+  --input: rgb(7 54 66 / 26%);
+  --ring: #268bd2;
+  --chart-1: #037eac;
+  --chart-2: #873a05;
+  --chart-3: #139d9c;
+  --chart-4: #4a46cc;
+  --chart-5: #a17305;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -167,5 +787,533 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/*
+ * Theme structure: borders, shadows, shapes, and backgrounds beyond what tokens can express. Rules target components by
+ * data-slot, sit in the utilities layer after Tailwind's own, and keep to (0,1,0) specificity: they beat a component's
+ * resting classes (ring-1, border-input) by source order, and lose to its state classes (focus-visible:ring-3,
+ * aria-invalid:border-destructive), so focus rings and error states still show in every theme.
+ *
+ * Wrap lists in :is() (specificity of one attribute) and extra conditions in :where() (none).
+ */
+@layer utilities {
+  :where([data-theme="synthwave"]) {
+    body::before {
+      content: "";
+      position: fixed;
+      inset: auto -50% 0;
+      z-index: -1;
+      height: 40vh;
+      pointer-events: none;
+      background-image: linear-gradient(rgb(255 126 219 / 30%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 126 219 / 30%) 1px, transparent 1px);
+      background-size: 48px 48px;
+      transform: perspective(320px) rotateX(60deg);
+      transform-origin: bottom;
+      mask-image: linear-gradient(to top, #000, transparent);
+    }
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 0 0 1px rgb(255 126 219 / 45%),
+        0 0 24px -6px rgb(255 126 219 / 50%),
+        inset 0 0 20px -12px rgb(54 249 246 / 45%);
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 10px rgb(255 126 219 / 70%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant="default"]) {
+      box-shadow: 0 0 18px -2px rgb(255 126 219 / 65%);
+    }
+  }
+
+  :where([data-theme="cyberpunk"]) {
+    :is([data-slot="card"], [data-slot="dialog-content"], [data-slot="alert-dialog-content"]) {
+      /* Cut the top-right and bottom-left corners, and trace each cut in yellow. */
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+      background-image: linear-gradient(225deg, transparent 12px, var(--primary) 12px 14px, transparent 14px), linear-gradient(45deg, transparent 12px, var(--primary) 12px 14px, transparent 14px);
+      box-shadow:
+        inset 3px 0 0 var(--primary),
+        inset 0 0 0 1px rgb(252 238 10 / 22%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"], :focus-visible)) {
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]:where([data-variant]), [data-slot="badge"], [data-slot="tabs-trigger"]) {
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    :is([data-slot="input"], [data-slot="select-trigger"]) {
+      border-width: 0 0 2px;
+      border-color: var(--primary);
+    }
+  }
+
+  :where([data-theme="phosphor"]) {
+    body {
+      text-shadow: 0 0 5px rgb(125 255 155 / 35%);
+    }
+    /* Scanlines over everything, dialogs and toasts included. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      pointer-events: none;
+      background: repeating-linear-gradient(transparent 0 2px, rgb(0 0 0 / 18%) 2px 3px);
+    }
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 0 0 1px rgb(125 255 155 / 40%),
+        0 0 18px -6px rgb(125 255 155 / 35%);
+    }
+    /* VT323 is small on its body: scale it to sit with JetBrains Mono. */
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-size: 1.4em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]:where([data-variant])) {
+      text-transform: uppercase;
+    }
+  }
+
+  :where([data-theme="blueprint"]) {
+    body {
+      background-image:
+        linear-gradient(rgb(242 247 255 / 6%) 1px, transparent 1px), linear-gradient(90deg, rgb(242 247 255 / 6%) 1px, transparent 1px), linear-gradient(rgb(242 247 255 / 11%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(242 247 255 / 11%) 1px, transparent 1px);
+      background-size:
+        16px 16px,
+        16px 16px,
+        80px 80px,
+        80px 80px;
+    }
+    /* A dashed outline with solid corner ticks, like a drawing's crop marks. */
+    [data-slot="card"] {
+      --tick: linear-gradient(var(--foreground), var(--foreground));
+      box-shadow: none;
+      outline: 1px dashed rgb(242 247 255 / 50%);
+      outline-offset: -1px;
+      background-image: var(--tick), var(--tick), var(--tick), var(--tick), var(--tick), var(--tick), var(--tick), var(--tick);
+      background-repeat: no-repeat;
+      background-size:
+        14px 2px,
+        2px 14px,
+        14px 2px,
+        2px 14px,
+        14px 2px,
+        2px 14px,
+        14px 2px,
+        2px 14px;
+      background-position:
+        top left,
+        top left,
+        top right,
+        top right,
+        bottom left,
+        bottom left,
+        bottom right,
+        bottom right;
+    }
+    :is(
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow: 0 0 0 1px rgb(242 247 255 / 60%);
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]:where([data-variant]), [data-slot="badge"], [data-slot="tabs-trigger"]) {
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+  }
+
+  :where([data-theme="art-deco"]) {
+    body {
+      background-image: repeating-conic-gradient(from 0deg at 50% -10%, rgb(226 192 105 / 4%) 0deg 3deg, transparent 3deg 9deg);
+    }
+    /* A gold double frame. */
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        inset 0 0 0 1px rgb(226 192 105 / 60%),
+        inset 0 0 0 4px var(--card),
+        inset 0 0 0 5px rgb(226 192 105 / 35%);
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]:where([data-variant]), [data-slot="badge"], [data-slot="tabs-trigger"]) {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+  }
+
+  :where([data-theme="liquid-glass"]) {
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(40% 35% at 12% 8%, rgb(99 102 241 / 35%), transparent), radial-gradient(35% 30% at 88% 18%, rgb(236 72 153 / 22%), transparent),
+        radial-gradient(45% 40% at 60% 92%, rgb(20 184 166 / 24%), transparent);
+    }
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"],
+      [data-slot="sheet-content"]
+    ) {
+      background-color: color-mix(in oklab, var(--card) 72%, transparent);
+      backdrop-filter: blur(24px) saturate(170%);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 14%),
+        inset 0 0 0 1px rgb(255 255 255 / 8%),
+        0 12px 32px -12px rgb(0 0 0 / 60%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border-radius: 9999px;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant="default"]) {
+      background-image: linear-gradient(rgb(255 255 255 / 22%), transparent);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 40%),
+        0 6px 16px -6px rgb(143 184 255 / 60%);
+    }
+  }
+
+  :where([data-theme="dracula"]) {
+    [data-slot="card"] {
+      box-shadow:
+        inset 0 2px 0 var(--primary),
+        0 0 0 1px rgb(98 114 164 / 35%);
+    }
+  }
+
+  :where([data-theme="nord"]) {
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 0 0 1px rgb(216 222 233 / 8%),
+        0 2px 4px rgb(0 0 0 / 20%),
+        0 12px 28px -12px rgb(0 0 0 / 55%);
+    }
+  }
+
+  :where([data-theme="catppuccin"]) {
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border-radius: 9999px;
+    }
+    [data-slot="card"] {
+      box-shadow:
+        0 0 0 1px rgb(205 214 244 / 8%),
+        0 10px 28px -14px rgb(0 0 0 / 70%);
+    }
+  }
+
+  :where([data-theme="gruvbox"]) {
+    [data-slot="card"] {
+      box-shadow:
+        0 0 0 1px #3c3836,
+        4px 4px 0 #0d0f10;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      box-shadow: inset 0 -2px 0 rgb(0 0 0 / 35%);
+    }
+  }
+
+  :where([data-theme="neo-brutalism"]) {
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 0 0 2px var(--foreground),
+        5px 5px 0 2px var(--foreground);
+    }
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"], [data-slot="badge"], [data-slot="tabs-list"]) {
+      border: 2px solid var(--foreground);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border: 2px solid var(--foreground);
+      box-shadow: 3px 3px 0 var(--foreground);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"]):active) {
+      box-shadow: 1px 1px 0 var(--foreground);
+    }
+    :is([data-slot="checkbox"], [data-slot="switch"]) {
+      border-color: var(--foreground);
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-weight: 700;
+    }
+  }
+
+  :where([data-theme="windows-98"]) {
+    /* 98.css bevels: two 1px highlights and two 1px shadows. */
+    --raised: inset -1px -1px #0a0a0a, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+    --sunken: inset -1px -1px #ffffff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"],
+      [data-slot="sheet-content"]
+    ) {
+      box-shadow: var(--raised);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border-color: transparent;
+      box-shadow: var(--raised);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"]):active) {
+      box-shadow: var(--sunken);
+    }
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"], [data-slot="checkbox"]) {
+      border-color: transparent;
+      background-color: #ffffff;
+      box-shadow: var(--sunken);
+    }
+    /* A title bar, inset in the window frame. */
+    [data-slot="card-title"] {
+      padding: 2px 6px;
+      background-image: linear-gradient(90deg, #000080, #0a4d9e);
+      color: #ffffff;
+      font-weight: 700;
+    }
+  }
+
+  :where([data-theme="aqua"]) {
+    body {
+      background-image: repeating-linear-gradient(transparent 0 2px, rgb(255 255 255 / 50%) 2px 4px);
+    }
+    :is([data-slot="card"], [data-slot="popover-content"], [data-slot="dropdown-menu-content"], [data-slot="dropdown-menu-sub-content"], [data-slot="select-content"]) {
+      box-shadow:
+        0 0 0 1px rgb(0 0 0 / 14%),
+        0 6px 18px -6px rgb(0 0 0 / 35%);
+    }
+    :is([data-slot="dialog-content"], [data-slot="alert-dialog-content"]) {
+      box-shadow:
+        0 0 0 1px rgb(0 0 0 / 20%),
+        0 24px 60px rgb(0 0 0 / 45%);
+    }
+    /* Gel capsules: a highlight across the top half, kept faint at the text's height so labels keep their contrast. */
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border-color: rgb(0 0 0 / 25%);
+      border-radius: 9999px;
+      background-image: linear-gradient(rgb(255 255 255 / 30%), rgb(255 255 255 / 4%) 50%, transparent 50%, rgb(255 255 255 / 18%));
+      box-shadow:
+        inset 0 1px 1px rgb(255 255 255 / 60%),
+        0 1px 2px rgb(0 0 0 / 25%);
+    }
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"]) {
+      background-color: #ffffff;
+      box-shadow: inset 0 1px 2px rgb(0 0 0 / 22%);
+    }
+  }
+
+  :where([data-theme="editorial"]) {
+    /* A heavy rule over a hairline box, like a newspaper section. */
+    [data-slot="card"] {
+      box-shadow:
+        inset 0 3px 0 var(--foreground),
+        inset 0 0 0 1px rgb(27 23 18 / 30%);
+    }
+    :is(
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 0 0 1px var(--foreground),
+        4px 4px 0 rgb(27 23 18 / 12%);
+    }
+    :is([data-slot="input"], [data-slot="select-trigger"]) {
+      border-width: 0 0 1px;
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]:where([data-variant]), [data-slot="badge"], [data-slot="tabs-trigger"]) {
+      font-variant-caps: small-caps;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  :where([data-theme="notebook"]) {
+    body {
+      background-image: linear-gradient(transparent calc(2rem - 1px), rgb(31 63 191 / 13%) calc(2rem - 1px));
+      background-size: 100% 2rem;
+    }
+    /* Hand-drawn outlines: uneven elliptical corners that the browser scales to each box. */
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      box-shadow:
+        0 0 0 2px var(--foreground),
+        3px 4px 0 2px rgb(43 43 43 / 12%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border: 2px solid var(--foreground);
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    }
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"]) {
+      border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+    }
+    /* A highlighter stroke under titles, sized to the words rather than the box. */
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-size: 1.15em;
+      text-decoration: underline 0.45em #ffe36e;
+      text-decoration-skip-ink: none;
+      text-underline-offset: -0.3em;
+    }
+  }
+
+  :where([data-theme="clay"]) {
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        10px 12px 28px -8px rgb(76 58 140 / 25%),
+        inset -6px -6px 12px rgb(76 58 140 / 10%),
+        inset 6px 6px 12px rgb(255 255 255 / 85%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
+      border-color: transparent;
+      border-radius: 9999px;
+      box-shadow:
+        4px 6px 12px -2px rgb(76 58 140 / 28%),
+        inset -3px -4px 6px rgb(0 0 0 / 14%),
+        inset 3px 3px 6px rgb(255 255 255 / 40%);
+    }
+    :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"]):active) {
+      box-shadow:
+        inset 3px 3px 6px rgb(0 0 0 / 18%),
+        inset -2px -2px 4px rgb(255 255 255 / 40%);
+    }
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"], [data-slot="tabs-list"]) {
+      border-color: transparent;
+      background-color: var(--muted);
+      box-shadow:
+        inset 3px 3px 6px rgb(76 58 140 / 16%),
+        inset -3px -3px 6px rgb(255 255 255 / 85%);
+    }
+  }
+
+  :where([data-theme="game-boy"]) {
+    /* Bars on each side but not the corners: the notched frame of an 8-bit dialog box. */
+    :is(
+      [data-slot="card"],
+      [data-slot="dialog-content"],
+      [data-slot="alert-dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"]
+    ) {
+      box-shadow:
+        0 -4px 0 var(--foreground),
+        0 4px 0 var(--foreground),
+        -4px 0 0 var(--foreground),
+        4px 0 0 var(--foreground);
+    }
+    :is(
+      [data-slot="button"]:where([data-variant]:not([data-variant="ghost"], [data-variant="link"])),
+      [data-slot$="-trigger"]:where([data-variant]:not([data-variant="ghost"], [data-variant="link"])),
+      [data-slot="input"],
+      [data-slot="textarea"],
+      [data-slot="select-trigger"],
+      [data-slot="input-group"]
+    ) {
+      border-color: transparent;
+      box-shadow:
+        0 -2px 0 var(--foreground),
+        0 2px 0 var(--foreground),
+        -2px 0 0 var(--foreground),
+        2px 0 0 var(--foreground);
+    }
+    /* Press Start 2P is wide: bring titles down to its 8px grid. */
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      font-size: 0.75em;
+      line-height: 1.6;
+    }
   }
 }

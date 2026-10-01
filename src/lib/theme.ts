@@ -18,7 +18,25 @@ interface ThemeInfo {
 export const themes = {
   "neon-void": { label: "Neon Void", appearance: "dark" },
   "grok-night": { label: "Grok Night", appearance: "dark" },
-  "tokyo-night": { label: "Tokyo Night", appearance: "dark" }
+  "tokyo-night": { label: "Tokyo Night", appearance: "dark" },
+  synthwave: { label: "Synthwave", appearance: "dark" },
+  cyberpunk: { label: "Cyberpunk", appearance: "dark" },
+  phosphor: { label: "Phosphor", appearance: "dark" },
+  blueprint: { label: "Blueprint", appearance: "dark" },
+  "art-deco": { label: "Art Deco", appearance: "dark" },
+  "liquid-glass": { label: "Liquid Glass", appearance: "dark" },
+  dracula: { label: "Dracula", appearance: "dark" },
+  nord: { label: "Nord", appearance: "dark" },
+  catppuccin: { label: "Catppuccin", appearance: "dark" },
+  gruvbox: { label: "Gruvbox", appearance: "dark" },
+  "neo-brutalism": { label: "Neo Brutalism", appearance: "light" },
+  "windows-98": { label: "Windows 98", appearance: "light" },
+  aqua: { label: "Aqua", appearance: "light" },
+  editorial: { label: "Editorial", appearance: "light" },
+  notebook: { label: "Notebook", appearance: "light" },
+  clay: { label: "Clay", appearance: "light" },
+  "game-boy": { label: "Game Boy", appearance: "light" },
+  solarized: { label: "Solarized", appearance: "light" }
 } as const satisfies Readonly<Record<string, ThemeInfo>>;
 
 export type ThemeId = keyof typeof themes;

@@ -6,7 +6,7 @@ One package that gives every web app the same look and the same guardrails: two 
 
 | Piece      | What an app gets                                                                                                                                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Theme      | `styles.css`: Tailwind v4, three dark themes (Neon Void, the default; Grok Night; Tokyo Night), Geist and JetBrains Mono, safe-area utilities.                                                                                    |
+| Theme      | `styles.css`: Tailwind v4, 21 themes (13 dark, 8 light; Neon Void is the default) that change fonts, borders, shadows, and shapes as well as colours, safe-area utilities.                                                        |
 | Components | 34 shadcn/ui components plus a theme switcher, `toast`, and `cn`.                                                                                                                                                                 |
 | TypeScript | `tsconfig.json` with `strict` and every extra strictness flag, including `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess`.                                                                                             |
 | ESLint     | typescript-eslint `strictTypeChecked`, `@eslint-react` strict, jsx-a11y strict, unicorn, react-refresh, and all six [`@shadcn/lint`](https://github.com/shadcn-ui/lint) design-system rules, with explicit return types required. |
@@ -131,10 +131,11 @@ Apps receive the release the next time they run `pnpm update @jacobragsdale/ui`.
 
 ## Add a theme
 
-1. In [`src/styles.css`](src/styles.css), copy the `[data-theme="grok-night"]` block, rename the selector to the new theme's id, and change the values. Keep every colour used for text (the `*-foreground` tokens, `primary`, `destructive`, `success`, `warning`) at 4.5:1 contrast or better against `background`, `card`, and `muted`; any WCAG contrast checker works.
-2. In [`src/lib/theme.ts`](src/lib/theme.ts), add the id to `themes` with its label and `appearance` (`"light"` or `"dark"`; dark themes turn on the `dark:` variants that shadcn components use). `ThemeId`, `themeIds`, and the theme switcher pick it up from there.
-3. Run `pnpm install` at the repository root, then `pnpm dev` in `template/`, and check the new theme in the picker. Inside this repository the template uses the local checkout, not the GitHub release.
-4. [Release](#release-a-change) it as a `minor` version.
+1. In [`src/styles.css`](src/styles.css), copy a theme block such as `[data-theme="nord"]`, rename the selector to the new theme's id, and change the values: colours, `--radius`, and optionally `--font-sans`, `--font-heading`, and `--font-mono` (import a new font at the top of the file from Fontsource). Keep every colour used for text (the `*-foreground` tokens, `primary`, `destructive`, `success`, `warning`) at 5.5:1 contrast or better against `background`, `card`, `muted`, and `popover`; `pnpm test` checks it.
+2. To change more than colours and fonts, add a block for the theme to the "Theme structure" section at the end of `styles.css`. It restyles components by their `data-slot` (`card`, `button`, `input`, and so on): borders, shadows, corner shapes, and the page background. The comment at the top of that section says how to keep focus rings and error states working.
+3. In [`src/lib/theme.ts`](src/lib/theme.ts), add the id to `themes` with its label and `appearance` (`"light"` or `"dark"`; dark themes turn on the `dark:` variants that shadcn components use). `ThemeId`, `themeIds`, and the theme switcher pick it up from there.
+4. Run `pnpm install` at the repository root, then `pnpm dev` in `template/`, and check the new theme in the picker. Inside this repository the template uses the local checkout, not the GitHub release.
+5. [Release](#release-a-change) it as a `minor` version.
 
 To change which theme apps start in, change `defaultTheme` in `src/lib/theme.ts` and move the `:root` selector in `styles.css` to that theme's block. An app can also pick its own default with `initTheme("grok-night")`. The default applies only until a visitor picks a theme; the choice is saved in `localStorage` per origin, so each app remembers its own.
 
@@ -148,7 +149,7 @@ pnpm shadcn add COMPONENT
 
 `COMPONENT` is a name from the [shadcn/ui component list](https://ui.shadcn.com/docs/components), such as `popover`. The CLI writes it to `src/components/ui/` and adds its dependencies, and apps import it as `@jacobragsdale/ui/components/ui/COMPONENT` with no export list to update. If `pnpm typecheck` then reports `Cannot find module` for a package the new file imports, `pnpm add` that package; the CLI missed `@base-ui/react` the first time.
 
-Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Five files carry local edits that `pnpm shadcn add --overwrite` would undo, each marked `Local edit`: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`; `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`; `slider.tsx` draws one thumb for a single-number `value` (upstream drew two) and puts `aria-label` on the thumb's input; `badge.tsx` adds `success` and `warning` variants; and `sheet.tsx` pads the screen edges a sheet touches for the notch and home bar.
+Files in `src/components/ui/` stay as shadcn generates them: ESLint and Prettier skip them, and `tsc` still checks them. Six files carry local edits that `pnpm shadcn add --overwrite` would undo, each marked `Local edit`: `sonner.tsx` reads the theme from `#lib/theme` instead of `next-themes`; `scroll-area.tsx` drops an unused `React` import that fails `noUnusedLocals`; `slider.tsx` draws one thumb for a single-number `value` (upstream drew two) and puts `aria-label` on the thumb's input; `badge.tsx` adds `success` and `warning` variants; `button.tsx` sets `data-variant` so theme structure rules can tell variants apart; and `sheet.tsx` pads the screen edges a sheet touches for the notch and home bar.
 
 ## Reference
 
@@ -176,7 +177,7 @@ An app that uses `components/ui/chart` adds `recharts` at the version in this pa
 | Export                 | Description                                                                                                    |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `themes`               | Every theme id with its `label` and `appearance`.                                                              |
-| `ThemeId`              | Union of theme ids: `"neon-void" \| "grok-night" \| "tokyo-night"`.                                            |
+| `ThemeId`              | Union of the ids in `themes`, such as `"neon-void"`.                                                           |
 | `themeIds`             | The ids as an array, in declaration order.                                                                     |
 | `defaultTheme`         | `"neon-void"`.                                                                                                 |
 | `initTheme(fallback?)` | Applies the theme saved in `localStorage`, or `fallback` (default `defaultTheme`). Call once before rendering. |
