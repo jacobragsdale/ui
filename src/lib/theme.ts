@@ -45,6 +45,28 @@ export const defaultTheme: ThemeId = "neon-void";
 
 const storageKey = "theme";
 
+// The choice lives in a cookie on the parent domain, so every app under it (hub., lights., money.ragsdale.dev) shares it.
+// Cookies ignore ports, so dev servers on localhost share it as well.
+// ponytail: the parent is the last two labels, which a public suffix like co.uk rejects; localStorage then keeps the old per-app behaviour.
+function cookieDomain(): string {
+  const { hostname } = location;
+  return hostname.includes(".") && !/^[\d.]+$|:/.test(hostname) ? `; domain=${hostname.split(".").slice(-2).join(".")}` : "";
+}
+
+function savedTheme(): string | null {
+  const cookie = /(?:^|; )ui-theme=([^;]*)/.exec(document.cookie)?.[1];
+  if (cookie !== undefined) {
+    return cookie;
+  }
+  try {
+    // Choices saved per app before the cookie existed.
+    return localStorage.getItem(storageKey);
+  } catch {
+    // Storage is blocked (private mode, sandboxed iframe): use the fallback.
+    return null;
+  }
+}
+
 export function isThemeId(value: unknown): value is ThemeId {
   return typeof value === "string" && Object.hasOwn(themes, value);
 }
@@ -61,19 +83,24 @@ function apply(id: ThemeId): void {
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", background);
 }
 
-/** Apply the saved theme, or `fallback`, before the first render. */
+/** Apply the saved theme, or `fallback`, before the first render, and again whenever the tab returns, in case another app changed it. */
 export function initTheme(fallback: ThemeId = defaultTheme): void {
-  let stored: string | null = null;
-  try {
-    stored = localStorage.getItem(storageKey);
-  } catch {
-    // Storage is blocked (private mode, sandboxed iframe): use the fallback.
-  }
-  apply(isThemeId(stored) ? stored : fallback);
+  const sync = (): void => {
+    const stored = savedTheme();
+    apply(isThemeId(stored) ? stored : fallback);
+  };
+  sync();
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      sync();
+    }
+  });
 }
 
 export function setTheme(id: ThemeId): void {
   apply(id);
+  // 400 days is the longest expiry browsers keep.
+  document.cookie = `ui-theme=${id}; path=/; max-age=34560000; samesite=lax${cookieDomain()}`;
   try {
     localStorage.setItem(storageKey, id);
   } catch {

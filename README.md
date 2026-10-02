@@ -137,7 +137,7 @@ Apps receive the release the next time they run `pnpm update @jacobragsdale/ui`.
 4. Run `pnpm install` at the repository root, then `pnpm dev` in `template/`, and check the new theme in the picker. Inside this repository the template uses the local checkout, not the GitHub release.
 5. [Release](#release-a-change) it as a `minor` version.
 
-To change which theme apps start in, change `defaultTheme` in `src/lib/theme.ts` and move the `:root` selector in `styles.css` to that theme's block. An app can also pick its own default with `initTheme("grok-night")`. The default applies only until a visitor picks a theme; the choice is saved in `localStorage` per origin, so each app remembers its own.
+To change which theme apps start in, change `defaultTheme` in `src/lib/theme.ts` and move the `:root` selector in `styles.css` to that theme's block. An app can also pick its own default with `initTheme("grok-night")`. The default applies only until a visitor picks a theme; the choice is saved in a `ui-theme` cookie on the parent domain, so every app under it (`hub.ragsdale.dev`, `lights.ragsdale.dev`, and so on) shares it, and an open tab picks up a change made in another app when it comes back into view.
 
 ## Add a shadcn component
 
@@ -174,16 +174,16 @@ An app that uses `components/ui/chart` adds `recharts` at the version in this pa
 
 ### Theme runtime (`lib/theme`)
 
-| Export                 | Description                                                                                                    |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `themes`               | Every theme id with its `label` and `appearance`.                                                              |
-| `ThemeId`              | Union of the ids in `themes`, such as `"neon-void"`.                                                           |
-| `themeIds`             | The ids as an array, in declaration order.                                                                     |
-| `defaultTheme`         | `"neon-void"`.                                                                                                 |
-| `initTheme(fallback?)` | Applies the theme saved in `localStorage`, or `fallback` (default `defaultTheme`). Call once before rendering. |
-| `setTheme(id)`         | Applies a theme and saves it to `localStorage` under the key `theme`.                                          |
-| `useTheme()`           | React hook returning the current `ThemeId`; re-renders when the theme changes.                                 |
-| `isThemeId(value)`     | Type guard for untrusted values such as storage or select input.                                               |
+| Export                 | Description                                                                                                                                                                                                                 |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `themes`               | Every theme id with its `label` and `appearance`.                                                                                                                                                                           |
+| `ThemeId`              | Union of the ids in `themes`, such as `"neon-void"`.                                                                                                                                                                        |
+| `themeIds`             | The ids as an array, in declaration order.                                                                                                                                                                                  |
+| `defaultTheme`         | `"neon-void"`.                                                                                                                                                                                                              |
+| `initTheme(fallback?)` | Applies the theme saved in the `ui-theme` cookie (or, before one exists, this app's `localStorage`), or `fallback` (default `defaultTheme`), and reapplies it whenever the tab becomes visible. Call once before rendering. |
+| `setTheme(id)`         | Applies a theme and saves it to the `ui-theme` cookie on the parent domain (shared by every subdomain and every localhost port) and to `localStorage`.                                                                      |
+| `useTheme()`           | React hook returning the current `ThemeId`; re-renders when the theme changes.                                                                                                                                              |
+| `isThemeId(value)`     | Type guard for untrusted values such as storage or select input.                                                                                                                                                            |
 
 A theme is applied by setting `data-theme` on `<html>`, toggling the `dark` class for dark themes, and copying the theme's `--background` into `<meta name="theme-color">` when the page has one.
 
