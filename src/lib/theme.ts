@@ -84,18 +84,25 @@ function apply(id: ThemeId): void {
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", background);
 }
 
-/** Apply the saved theme, or `fallback`, before the first render, and again whenever the tab returns, in case another app changed it. */
+/** Apply the saved theme, or `fallback`, before the first render, and again the moment another app changes it. */
 export function initTheme(fallback: ThemeId = defaultTheme): void {
   const sync = (): void => {
     const stored = savedTheme();
-    apply(isThemeId(stored) ? stored : fallback);
+    const id = isThemeId(stored) ? stored : fallback;
+    if (id !== document.documentElement.dataset["theme"]) {
+      apply(id);
+    }
   };
   sync();
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      sync();
-    }
-  });
+  // The browser reports the cookie changing to every open page that can read it, so a window left open in view follows
+  // at once. Insecure pages (a LAN address over http) and older browsers lack the API.
+  if ("cookieStore" in globalThis) {
+    cookieStore.addEventListener("change", sync);
+  }
+  // Without it, catch up when the page is next looked at: shown again, focused, or restored by Back, which runs no script.
+  for (const type of ["visibilitychange", "focus", "pageshow"]) {
+    globalThis.addEventListener(type, sync);
+  }
 }
 
 export function setTheme(id: ThemeId): void {

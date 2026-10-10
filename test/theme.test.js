@@ -23,3 +23,25 @@ test("setTheme writes the cookie to the parent domain", async () => {
     ["ragsdale.dev", undefined, undefined]
   );
 });
+
+// A window left open in view gets no visibility or focus event, so only the cookie's change event can move it.
+test("initTheme follows the cookie the moment another app changes it", async () => {
+  let cookie = "ui-theme=nord";
+  const root = { dataset: {}, classList: { toggle: () => {} } };
+  globalThis.getComputedStyle = () => ({ getPropertyValue: () => "" });
+  globalThis.document = {
+    documentElement: root,
+    querySelector: () => null,
+    get cookie() {
+      return cookie;
+    }
+  };
+  globalThis.cookieStore = new EventTarget();
+  globalThis.addEventListener = () => {};
+  const { initTheme } = await import("../src/lib/theme.ts");
+  initTheme();
+  assert.equal(root.dataset.theme, "nord");
+  cookie = "ui-theme=dracula";
+  globalThis.cookieStore.dispatchEvent(new Event("change"));
+  assert.equal(root.dataset.theme, "dracula");
+});
