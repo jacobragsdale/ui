@@ -56,7 +56,7 @@ Do not declare `--color-*` tokens in an app. `@shadcn/lint` ignores token declar
 
 Themes change the colour tokens, radius, and fonts, and restyle the shared components themselves: borders, shadows, corner shapes, and the page background. A page that follows these rules looks right in every theme, because only the components and tokens change. Styling your own markup to imitate one theme breaks the others.
 
-- **Dark:** Neon Void (the default) and Grok Night, matching the terminal palettes in [jacobragsdale/theme](https://github.com/jacobragsdale/theme); Tokyo Night, the palette Money, Hub, and Lights used before this package; Synthwave, Cyberpunk, Phosphor, Blueprint, Art Deco, Liquid Glass, Dracula, Nord, Catppuccin, and Gruvbox.
+- **Dark:** Neon Void (the default) and Grok Night, matching the terminal palettes in [jacobragsdale/theme](https://github.com/jacobragsdale/theme); Tokyo Night, the palette Money, Hub, and Lights used before this package; Synthwave, Cyberpunk, Phosphor, Blueprint, Art Deco, Liquid Glass, Dracula, Nord, Catppuccin, Gruvbox, and Bloomberg Terminal.
 - **Light:** Neo Brutalism, Windows 98, Aqua, Editorial, Notebook, Clay, Game Boy, and Solarized.
 
 Light themes exist, so never assume a dark page: use the tokens rather than `dark:` variants or fixed white text.

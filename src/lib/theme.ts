@@ -29,6 +29,7 @@ export const themes = {
   nord: { label: "Nord", appearance: "dark" },
   catppuccin: { label: "Catppuccin", appearance: "dark" },
   gruvbox: { label: "Gruvbox", appearance: "dark" },
+  bloomberg: { label: "Bloomberg Terminal", appearance: "dark" },
   "neo-brutalism": { label: "Neo Brutalism", appearance: "light" },
   "windows-98": { label: "Windows 98", appearance: "light" },
   aqua: { label: "Aqua", appearance: "light" },

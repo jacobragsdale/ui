@@ -25,6 +25,9 @@
 @import "@fontsource-variable/rubik";
 @import "@fontsource-variable/source-serif-4";
 @import "@fontsource-variable/space-grotesk";
+@import "@fontsource/dejavu-mono/400.css";
+@import "@fontsource/dejavu-sans/400.css";
+@import "@fontsource/dejavu-sans/700.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "@fontsource/ibm-plex-mono/600.css";
@@ -513,6 +516,43 @@
   --chart-3: #78a106;
   --chart-4: #d7408f;
   --chart-5: #9e7f11;
+}
+
+/*
+ * Bloomberg Terminal: amber on black, every colour sampled from Terminal screen captures; only the red is lifted, from
+ * #ff2c4a, to clear 5.5:1 on the grey section bands. Bloomberg Prop is Matthew Carter's Terminal face, present where the
+ * Bloomberg client installed its fonts; DejaVu Sans matches its widths and shapes most closely of the open fonts.
+ */
+[data-theme="bloomberg"] {
+  color-scheme: dark;
+  --radius: 0rem;
+  --font-sans: "Bloomberg Prop Unicode N", "DejaVu Sans", sans-serif;
+  --font-mono: "DejaVu Mono", monospace;
+  --background: #000000;
+  --foreground: #ffa028;
+  --card: #000000;
+  --card-foreground: #ffa028;
+  --popover: #0c0c0c;
+  --popover-foreground: #ffa028;
+  --primary: #ffa028;
+  --primary-foreground: #000000;
+  --secondary: #404040;
+  --secondary-foreground: #f0f0f0;
+  --muted: #1e1e1e;
+  --muted-foreground: #9e9e9e;
+  --accent: #0051ba;
+  --accent-foreground: #ffffff;
+  --destructive: #ff5c6c;
+  --success: #50f06e;
+  --warning: #ffe100;
+  --border: #353535;
+  --input: #535353;
+  --ring: #2b8eff;
+  --chart-1: #0073ff;
+  --chart-2: #c97d0a;
+  --chart-3: #05a596;
+  --chart-4: #c052c8;
+  --chart-5: #a08c08;
 }
 
 /* Neo Brutalism: cream paper, black 2px outlines, hard offset shadows, Space Grotesk. */
@@ -1071,6 +1111,121 @@
     }
     :is([data-slot="button"], [data-slot$="-trigger"]):where([data-variant]:not([data-variant="ghost"], [data-variant="link"])) {
       box-shadow: inset 0 -2px 0 rgb(0 0 0 / 35%);
+    }
+  }
+
+  :where([data-theme="bloomberg"]) {
+    scrollbar-color: #646464 #141414;
+
+    /* A panel: a grey band across the top holds its title, as in the Terminal's section headers. */
+    [data-slot="card"] {
+      box-shadow: 0 0 0 1px var(--muted);
+    }
+    [data-slot="card-header"]:where(:first-child) {
+      margin-top: calc(var(--card-spacing) * -1);
+      padding-block: calc(var(--card-spacing) / 2);
+      background-color: var(--muted);
+    }
+    :is(
+      [data-slot="dialog-content"],
+      [data-slot="popover-content"],
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"],
+      [data-slot="select-content"],
+      [data-slot="sheet-content"]
+    ) {
+      box-shadow: 0 0 0 1px #464646;
+    }
+    :is([data-slot="card-title"], [data-slot="dialog-title"], [data-slot="alert-dialog-title"], [data-slot="sheet-title"], [data-slot="drawer-title"], [data-slot="empty-title"]) {
+      color: #ffffff;
+    }
+    /* The red toolbar, with the window's name at its right end. */
+    :is([data-slot="dialog-title"], [data-slot="sheet-title"]) {
+      margin: -1rem -1rem 0.25rem;
+      padding: 0.375rem 2.75rem 0.375rem 1rem;
+      background-color: #870f1e;
+      text-align: right;
+    }
+    :is([data-slot="dialog-close"], [data-slot="sheet-close"]) {
+      top: 0.25rem;
+      color: #ffffff;
+    }
+    [data-slot="alert-dialog-content"] {
+      box-shadow:
+        inset 0 0.25rem 0 #870f1e,
+        0 0 0 1px #464646;
+    }
+    /* Anything you can type into is an amber field with black text. The fill is an image so hover and dark: fills stay under it. */
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="input-group"]) {
+      --foreground: #000000;
+      --muted-foreground: #5c3a0e;
+      border-color: var(--primary);
+      background-image: linear-gradient(var(--primary), var(--primary));
+      color: #000000;
+    }
+    /* The dropdown button: a grey square holding the arrow. */
+    [data-slot="select-trigger"] > svg {
+      background-color: var(--secondary);
+      color: var(--secondary-foreground);
+    }
+    /* Slanted grey tabs; the selected one turns light grey with black text. */
+    [data-slot="tabs-list"]:where([data-variant="default"]) {
+      gap: 0.125rem;
+      padding: 0;
+      background-color: transparent;
+    }
+    [data-slot="tabs-trigger"]:where([data-slot="tabs-list"][data-variant="default"] > *) {
+      --foreground: #d7d7d7;
+      --muted-foreground: #d7d7d7;
+      --input: transparent;
+      padding-inline: 0.5rem 1rem;
+      background-image: linear-gradient(#464646, #464646);
+    }
+    [data-slot="tabs-trigger"]:where([data-slot="tabs-list"][data-variant="default"] > [data-active]) {
+      --foreground: #000000;
+      background-image: linear-gradient(#9e9e9e, #9e9e9e);
+    }
+    [data-slot="tabs-trigger"]:where([data-slot="tabs-list"][data-variant="default"] > :not(:focus-visible)) {
+      clip-path: polygon(0 0, calc(100% - 0.5rem) 0, 100% 100%, 0 100%);
+    }
+    /* The Terminal numbers everything you can pick: 1) Profile, 2) Issue Info. Screen readers skip the number. */
+    :is([data-slot="tabs-list"], [data-slot="dropdown-menu-content"], [data-slot="dropdown-menu-sub-content"]) {
+      counter-reset: item;
+    }
+    :is([data-slot="tabs-trigger"]:where([data-slot="tabs-list"][data-variant="default"] > *), [data-slot="dropdown-menu-item"]) {
+      counter-increment: item;
+    }
+    :is([data-slot="tabs-trigger"]:where([data-slot="tabs-list"][data-variant="default"] > *), [data-slot="dropdown-menu-item"])::before {
+      content: counter(item) ")" / "";
+      font-size: 0.85em;
+    }
+    [data-slot="dropdown-menu-item"]:where(:not([data-highlighted]))::before {
+      color: var(--muted-foreground);
+    }
+    /* Tables: a grey header band in white, no row rules, and the row under the pointer in pale yellow. */
+    [data-slot="table-header"] {
+      --foreground: #ffffff;
+      background-color: var(--muted);
+    }
+    [data-slot="table-row"] {
+      border-color: transparent;
+    }
+    [data-slot="table-row"]:where([data-slot="table-body"] > :hover) {
+      color: #fff399;
+    }
+    /* Pressed toggles take the Terminal's selection blue. */
+    :is([data-slot="toggle"], [data-slot="toggle-group-item"]):where([aria-pressed="true"]) {
+      --muted: var(--accent);
+      --foreground: var(--accent-foreground);
+      color: var(--accent-foreground);
+    }
+    /* Links in blue; ticked boxes and switches in the selection blue as well. */
+    [data-slot="button"]:where([data-variant="link"]) {
+      --primary: #66abff;
+    }
+    :is([data-slot="checkbox"], [data-slot="switch"]) {
+      --primary: #369aff;
+      --primary-foreground: #000000;
     }
   }
 
